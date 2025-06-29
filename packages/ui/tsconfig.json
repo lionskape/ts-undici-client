@@ -1,8 +1,9 @@
 {
-  "extends": "@repo/typescript-config/react-library.json",
-  "compilerOptions": {
-    "outDir": "dist"
-  },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+	"extends": "@ts-undici-client/typescript-config/base.json",
+	"type": "module",
+	"compilerOptions": {
+		"outDir": "dist"
+	},
+	"include": ["src"],
+	"exclude": ["node_modules", "dist"]
 }

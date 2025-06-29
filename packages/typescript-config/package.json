@@ -1,9 +1,10 @@
 {
-  "name": "@repo/typescript-config",
-  "version": "0.0.0",
-  "private": true,
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  }
+	"name": "@ts-undici-client/typescript-config",
+	"version": "0.0.0",
+	"private": true,
+	"license": "MIT",
+	"type": "module",
+	"publishConfig": {
+		"access": "public"
+	}
 }
