@@ -1,6 +1,5 @@
 {
 	"extends": "@ts-undici-client/typescript-config/base.json",
-	"type": "module",
 	"compilerOptions": {
 		"outDir": "dist"
 	},
