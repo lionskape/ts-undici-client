@@ -1,0 +1,21 @@
+{
+	"name": "ts-undici-client",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "turbo run build",
+		"dev": "turbo run dev",
+		"lint": "biome check",
+		"format": "biome format",
+		"check-types": "turbo run check-types"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.0.6",
+		"turbo": "2.5.4",
+		"typescript": "5.8.2"
+	},
+	"packageManager": "pnpm@10.12.4",
+	"engines": {
+		"node": ">=22"
+	}
+}
