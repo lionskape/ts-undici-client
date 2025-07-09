@@ -1,0 +1,16 @@
+{
+	"name": "@ts-undici-client/generator-tests",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "tsc -p ./tsconfig.json",
+		"test": "pnpm --filter @ts-undici-client/generator build && vitest run"
+	},
+	"devDependencies": {
+		"@ts-undici-client/typescript-config": "workspace:*",
+		"@types/node": "^22.15.3",
+		"typescript": "5.8.2",
+		"vitest": "^1.3.1"
+	}
+}
