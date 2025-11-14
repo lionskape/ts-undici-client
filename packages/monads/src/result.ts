@@ -20,7 +20,6 @@ export const Result = {
         isError,
         map,
         mapError,
-        swap,
         match,
 } as const;
 
@@ -46,14 +45,6 @@ export function mapError<T, E, F>(result: Result<T, E>, mapper: (error: E) => F)
         }
 
         return result;
-}
-
-export function swap<T, E>(result: Result<T, E>): Result<E, T> {
-        if (isOk(result)) {
-                return Error(result.value);
-        }
-
-        return Ok(result.error);
 }
 
 export function match<T, E, R>(
