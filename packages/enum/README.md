@@ -21,4 +21,10 @@ if (value instanceof Option) {
 
 // Полный набор вариантов выводится напрямую из переданного объекта
 type OptionVariants = typeof Option.variants; // readonly ["Some", "None"]
+
+// У экземпляра перечисления есть метод match с полной проверкой соответствия вариантов
+const asString = value.match({
+        Some: ({ value }) => value.toString(),
+        None: () => "empty",
+});
 ```
