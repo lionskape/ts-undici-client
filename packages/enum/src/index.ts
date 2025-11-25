@@ -21,7 +21,13 @@ export type EnumVariant<
         type: Name & string;
 } & VariantPayload<Factories[Name]>>;
 
+export type MatchHandlers<Factories extends VariantFactories, Result> = {
+        [Name in keyof Factories]: (variant: EnumVariant<Factories, Name>) => Result;
+};
+
 export type EnumValue<Factories extends VariantFactories> = {
+        match<Result>(handlers: MatchHandlers<Factories, Result>): Result;
+} & {
         [Key in keyof Factories]: EnumVariant<Factories, Key>;
 }[keyof Factories];
 
@@ -68,6 +74,18 @@ export function createEnum<const Factories extends VariantFactories>(
 
                         Object.freeze(this);
                 }
+
+                public match<Result>(handlers: MatchHandlers<Factories, Result>): Result {
+                        const handler = handlers[this.type];
+
+                        if (typeof handler !== "function") {
+                                throw new TypeError(
+                                        `Match handler for variant "${this.type}" must be a function, got ${typeof handler}.`,
+                                );
+                        }
+
+                        return handler(this as EnumVariant<Factories, typeof this.type>);
+                }
         }
 
         const variantNames = Object.keys(definitions) as (keyof Factories & string)[];
@@ -91,7 +109,7 @@ export function createEnum<const Factories extends VariantFactories>(
                                 return new EnumValue(
                                         name,
                                         (payload ?? {}) as Record<string, unknown>,
-                                ) as EnumVariant<Factories, typeof name>;
+                                ) as unknown as EnumVariant<Factories, typeof name>;
                         },
                         enumerable: true,
                         writable: false,
