@@ -80,7 +80,7 @@ export function createEnum<const Factories extends VariantFactories>(
 
                         if (typeof handler !== "function") {
                                 throw new TypeError(
-                                        `Match handlers must include a function for variant "${this.type}".`,
+                                        `Match handler for variant "${this.type}" must be a function, got ${typeof handler}.`,
                                 );
                         }
 
