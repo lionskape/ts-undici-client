@@ -17,9 +17,7 @@ export type VariantPayload<Factory> = Factory extends (...args: any[]) => infer 
 export type EnumVariant<
         Factories extends VariantFactories,
         Name extends keyof Factories,
-> = Readonly<{
-        type: Name & string;
-} & VariantPayload<Factories[Name]>>;
+> = Readonly<VariantPayload<Factories[Name]>>;
 
 export type MatchHandlers<Factories extends VariantFactories, Result> = {
         [Name in keyof Factories]: (variant: EnumVariant<Factories, Name>) => Result;
@@ -49,17 +47,10 @@ export function createEnum<const Factories extends VariantFactories>(
         definitions: Factories,
 ): EnumType<Factories> {
         class EnumValue {
-                public readonly type: keyof Factories & string;
+                readonly #type: keyof Factories & string;
 
                 public constructor(type: keyof Factories & string, payload: Record<string, unknown>) {
-                        this.type = type;
-
-                        Object.defineProperty(this, "type", {
-                                value: type,
-                                enumerable: true,
-                                writable: false,
-                                configurable: false,
-                        });
+                        this.#type = type;
 
                         for (const key in payload) {
                                 if (Object.prototype.hasOwnProperty.call(payload, key)) {
@@ -76,15 +67,16 @@ export function createEnum<const Factories extends VariantFactories>(
                 }
 
                 public match<Result>(handlers: MatchHandlers<Factories, Result>): Result {
-                        const handler = handlers[this.type];
+                        const type = this.#type;
+                        const handler = handlers[type];
 
                         if (typeof handler !== "function") {
                                 throw new TypeError(
-                                        `Match handler for variant "${this.type}" must be a function, got ${typeof handler}.`,
+                                        `Match handler for variant "${type}" must be a function, got ${typeof handler}.`,
                                 );
                         }
 
-                        return handler(this as EnumVariant<Factories, typeof this.type>);
+                        return handler(this as EnumVariant<Factories, typeof type>);
                 }
         }
 
