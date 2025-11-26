@@ -14,10 +14,8 @@ const Option = createEnum({
 
 const value = Option.Some(10);
 
-if (value instanceof Option) {
-        console.log(value.type); // "Some"
-        console.log(value.value); // 10
-}
+// Экземпляры перечисления не раскрывают тип варианта, поэтому
+// ветвление выполняется через match.
 
 // Полный набор вариантов выводится напрямую из переданного объекта
 type OptionVariants = typeof Option.variants; // readonly ["Some", "None"]
