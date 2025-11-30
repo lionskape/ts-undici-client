@@ -5,8 +5,8 @@
 	"scripts": {
 		"build": "turbo run build",
 		"dev": "turbo run dev",
-		"lint": "biome check",
-		"format": "biome format",
+		"lint": "biome check .",
+		"format": "biome format . --write",
 		"check-types": "turbo run check-types"
 	},
 	"devDependencies": {

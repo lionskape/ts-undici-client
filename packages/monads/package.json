@@ -1,24 +1,24 @@
 {
-        "name": "@ts-undici-client/monads",
-        "version": "0.0.0",
-        "private": true,
-        "type": "module",
-        "main": "dist/index.js",
-        "module": "dist/index.js",
-        "types": "dist/index.d.ts",
-        "exports": {
-                ".": {
-                        "types": "./dist/index.d.ts",
-                        "import": "./dist/index.js"
-                }
-        },
-        "scripts": {
-                "build": "tsc -p ./tsconfig.json",
-                "check-types": "tsc --noEmit"
-        },
-        "devDependencies": {
-                "@ts-undici-client/typescript-config": "workspace:*",
-                "@types/node": "^22.15.3",
-                "typescript": "5.8.2"
-        }
+	"name": "@ts-undici-client/monads",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"main": "dist/index.js",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"scripts": {
+		"build": "tsc -p ./tsconfig.json",
+		"check-types": "tsc --noEmit"
+	},
+	"devDependencies": {
+		"@ts-undici-client/typescript-config": "workspace:*",
+		"@types/node": "^22.15.3",
+		"typescript": "5.8.2"
+	}
 }
