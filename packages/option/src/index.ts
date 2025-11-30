@@ -15,16 +15,19 @@ type AnyOptionFactories = OptionFactories<unknown>;
 type SomePayload<T> = EnumVariant<OptionFactories<T>, "some">;
 type NonePayload = EnumVariant<OptionFactories<unknown>, "none">;
 
-type OptionMethods<T> = EnumMethods<OptionFactories<T>> & {
-        readonly isSome: (this: Option<T>) => this is Some<T>;
-        readonly isNone: (this: Option<T>) => this is None;
-        readonly map: <U>(this: Option<T>, mapper: (value: T) => U) => Option<U>;
-        readonly matchValue: <R>(
-                this: Option<T>,
-                patterns: { readonly some: (value: T) => R; readonly none: () => R },
-        ) => R;
-        readonly unwrapOr: (this: Option<T>, defaultValue: T) => T;
-};
+type OptionMethods<T> = EnumMethods<
+        OptionFactories<T>,
+        {
+                readonly isSome: (this: Option<T>) => this is Some<T>;
+                readonly isNone: (this: Option<T>) => this is None;
+                readonly map: <U>(this: Option<T>, mapper: (value: T) => U) => Option<U>;
+                readonly matchValue: <R>(
+                        this: Option<T>,
+                        patterns: { readonly some: (value: T) => R; readonly none: () => R },
+                ) => R;
+                readonly unwrapOr: (this: Option<T>, defaultValue: T) => T;
+        }
+>;
 
 type AnyOptionMethods = OptionMethods<unknown>;
 

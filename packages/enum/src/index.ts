@@ -29,13 +29,16 @@ export type EnumValue<Factories extends VariantFactories> = {
         [Key in keyof Factories]: EnumVariant<Factories, Key>;
 }[keyof Factories];
 
-export type EnumMethods<Factories extends VariantFactories> = {
-        [Name in string]: (this: EnumValue<Factories>, ...args: unknown[]) => unknown;
-};
+export type EnumMethods<
+        Factories extends VariantFactories,
+        Methods extends {
+                [Key in keyof Methods]: (this: EnumValue<Factories>, ...args: unknown[]) => unknown;
+        } = Record<never, never>,
+> = Methods;
 
 export type EnumInstance<
         Factories extends VariantFactories,
-        Methods extends EnumMethods<Factories> = Record<string, never>,
+        Methods extends EnumMethods<Factories> = Record<never, never>,
 > = EnumValue<Factories> & {
         [Key in keyof Methods]: Methods[Key] extends (this: any, ...args: infer Args) => infer Result
                 ? (this: EnumInstance<Factories, Methods>, ...args: Args) => Result
@@ -71,7 +74,7 @@ function isRecordLike(value: unknown): value is Record<string, unknown> {
 
 export function createEnum<
         const Factories extends VariantFactories,
-        const Methods extends EnumMethods<Factories> = Record<string, never>,
+        const Methods extends EnumMethods<Factories> = Record<never, never>,
 >(definitions: Factories, methods?: Methods): EnumTypeWithMethods<Factories, Methods> {
         class EnumValue {
                 readonly #type: keyof Factories & string;
