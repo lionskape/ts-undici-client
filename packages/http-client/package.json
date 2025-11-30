@@ -1,28 +1,28 @@
 {
-        "name": "@ts-undici-client/http-client",
-        "version": "0.0.0",
-        "private": true,
-        "type": "module",
-        "exports": {
-                "./package.json": "./package.json",
-                ".": {
-                        "types": "./dist/index.d.ts",
-                        "default": "./dist/index.js"
-                }
-        },
-        "main": "dist/index.js",
-        "types": "dist/index.d.ts",
-        "scripts": {
-                "build": "tsc -p ./tsconfig.json",
-                "check-types": "tsc --noEmit"
-        },
-        "dependencies": {
-                "xstate": "^5.24.0",
-                "zod": "^3.24.1"
-        },
-        "devDependencies": {
-                "@ts-undici-client/typescript-config": "workspace:*",
-                "@types/node": "^22.15.3",
-                "typescript": "5.8.2"
-        }
+	"name": "@ts-undici-client/http-client",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"exports": {
+		"./package.json": "./package.json",
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		}
+	},
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"build": "tsc -p ./tsconfig.json",
+		"check-types": "tsc --noEmit"
+	},
+	"dependencies": {
+		"xstate": "^5.24.0",
+		"zod": "^3.24.1"
+	},
+	"devDependencies": {
+		"@ts-undici-client/typescript-config": "workspace:*",
+		"@types/node": "^22.15.3",
+		"typescript": "5.8.2"
+	}
 }
