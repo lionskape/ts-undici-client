@@ -11,11 +11,11 @@ export interface Err<E> {
 }
 
 export const Ok = <T>(value: T): Ok<T> => ({ variant: "ok", value });
-export const Error = <E>(error: E): Err<E> => ({ variant: "error", error });
+export const Err = <E>(error: E): Err<E> => ({ variant: "error", error });
 
 export const Result = {
 	Ok,
-	Error,
+	Err,
 	isOk,
 	isError,
 	map,
@@ -47,7 +47,7 @@ export function mapError<T, E, F>(
 	mapper: (error: E) => F,
 ): Result<T, F> {
 	if (isError(result)) {
-		return Error(mapper(result.error));
+		return Err(mapper(result.error));
 	}
 
 	return result;

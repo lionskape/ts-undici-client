@@ -1,16 +1,16 @@
-export type VariantFactoryResult = Record<string, unknown> | void;
+export type VariantFactoryResult = Record<string, unknown> | undefined;
 
-export type VariantFactory<Args extends readonly unknown[] = any[]> = (
-	...args: Args
-) => VariantFactoryResult;
+export type VariantFactory<
+	Args extends readonly unknown[] = readonly unknown[],
+> = (...args: Args) => VariantFactoryResult;
 
 export type VariantFactories = { [Name in string]: VariantFactory };
 
 export type VariantPayload<Factory> = Factory extends (
-	...args: any[]
+	...args: readonly unknown[]
 ) => infer Result
-	? Result extends void
-		? {}
+	? Result extends undefined
+		? Record<string, never>
 		: Result extends Record<string, unknown>
 			? Result
 			: never
@@ -32,21 +32,19 @@ export type EnumValue<Factories extends VariantFactories> = {
 }[keyof Factories];
 
 export type EnumMethods<
-	Factories extends VariantFactories,
-	Methods extends {
-		[Key in keyof Methods]: (
-			this: EnumValue<Factories>,
-			...args: unknown[]
-		) => unknown;
-	} = Record<never, never>,
+	_Factories extends VariantFactories,
+	Methods extends Record<
+		string,
+		(...args: readonly unknown[]) => unknown
+	> = Record<string, never>,
 > = Methods;
 
 export type EnumInstance<
 	Factories extends VariantFactories,
-	Methods extends EnumMethods<Factories> = Record<never, never>,
+	Methods extends EnumMethods<Factories> = Record<string, never>,
 > = EnumValue<Factories> & {
 	[Key in keyof Methods]: Methods[Key] extends (
-		this: any,
+		this: EnumInstance<Factories, Methods>,
 		...args: infer Args
 	) => infer Result
 		? (this: EnumInstance<Factories, Methods>, ...args: Args) => Result
@@ -88,7 +86,7 @@ function isRecordLike(value: unknown): value is Record<string, unknown> {
 
 export function createEnum<
 	const Factories extends VariantFactories,
-	const Methods extends EnumMethods<Factories> = Record<never, never>,
+	const Methods extends EnumMethods<Factories> = Record<string, never>,
 >(
 	definitions: Factories,
 	methods?: Methods,

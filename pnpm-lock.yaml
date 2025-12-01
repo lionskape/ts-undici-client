@@ -114,6 +114,22 @@ importers:
         specifier: 5.8.2
         version: 5.8.2
 
+  packages/result:
+    dependencies:
+      '@ts-undici-client/enum':
+        specifier: workspace:*
+        version: link:../enum
+    devDependencies:
+      '@ts-undici-client/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^22.15.3
+        version: 22.15.3
+      typescript:
+        specifier: 5.8.2
+        version: 5.8.2
+
   packages/typescript-config: {}
 
 packages:

@@ -15,7 +15,13 @@ import type {
 const noop = () => undefined;
 
 const createNotImplementedService =
-	(step: keyof HttpClientMachineServices<any, any>) => async () => {
+	<
+		TResponseSchemas extends Record<number, unknown>,
+		TOpaqueExtra extends Record<string, unknown>,
+	>(
+		step: keyof HttpClientMachineServices<TResponseSchemas, TOpaqueExtra>,
+	) =>
+	async () => {
 		throw new HttpClientError(
 			`Http client ${step} handler is not implemented`,
 			{
@@ -67,7 +73,7 @@ function isResultEvent<
 
 export function createHttpClientMachine<
 	TResponseSchemas extends Record<number, unknown> = Record<number, unknown>,
-	TOpaqueExtra extends Record<string, unknown> = {},
+	TOpaqueExtra extends Record<string, unknown> = Record<string, never>,
 >(
 	options: CreateHttpClientMachineOptions<TResponseSchemas, TOpaqueExtra> = {},
 ) {
