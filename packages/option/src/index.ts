@@ -16,8 +16,8 @@ type NonePayload = EnumVariant<OptionFactories<unknown>, "none">;
 type OptionMethods<T> = EnumMethods<
 	OptionFactories<T>,
 	{
-		readonly isSome: (this: Option<T>) => this is Some<T>;
-		readonly isNone: (this: Option<T>) => this is None;
+		readonly isSome: (this: Option<T>) => boolean;
+		readonly isNone: (this: Option<T>) => boolean;
 		readonly map: <U>(this: Option<T>, mapper: (value: T) => U) => Option<U>;
 		readonly matchValue: <R>(
 			this: Option<T>,
@@ -27,29 +27,36 @@ type OptionMethods<T> = EnumMethods<
 	}
 >;
 
-const OptionEnum = createEnum<OptionFactories<unknown>, OptionMethods<unknown>>(
+export type Option<T> = EnumInstance<OptionFactories<T>, OptionMethods<T>>;
+export type Some<T> = Option<T> & SomePayload<T>;
+export type None = Option<never> & NonePayload;
+
+export const OptionEnum = createEnum<
+	OptionFactories<unknown>,
+	OptionMethods<unknown>
+>(
 	{
 		some: (value) => ({ value }),
 		none: () => undefined,
 	},
 	{
-		isSome<T>(this: Option<T>): this is Some<T> {
+		isSome<T>(this: Option<T>) {
 			return this.match({
 				some: () => true,
 				none: () => false,
 			});
 		},
-		isNone<T>(this: Option<T>): this is None {
+		isNone<T>(this: Option<T>) {
 			return this.match({
 				some: () => false,
 				none: () => true,
 			});
 		},
-		map<T, U>(this: Option<T>, mapper: (value: T) => U) {
+		map<T, U>(this: Option<T>, mapper: (value: T) => U): Option<U> {
 			return this.match({
 				some: ({ value }: SomePayload<T>) =>
-					OptionEnum.some(mapper(value)) as Option<U>,
-				none: () => OptionEnum.none() as Option<U>,
+					OptionEnum.some(mapper(value)) as unknown as Option<U>,
+				none: (): Option<U> => OptionEnum.none() as unknown as Option<U>,
 			});
 		},
 		matchValue<T, R>(
@@ -70,13 +77,10 @@ const OptionEnum = createEnum<OptionFactories<unknown>, OptionMethods<unknown>>(
 	},
 );
 
-export type Option<T> = EnumInstance<OptionFactories<T>, OptionMethods<T>>;
-export type Some<T> = Option<T> & SomePayload<T>;
-export type None = Option<never> & NonePayload;
+export const Some = <T>(value: T): Some<T> =>
+	OptionEnum.some(value) as unknown as Some<T>;
 
-export const Some = <T>(value: T): Some<T> => OptionEnum.some(value) as Some<T>;
-
-export const None = (): None => OptionEnum.none() as None;
+export const None = (): None => OptionEnum.none() as unknown as None;
 
 export const Option = Object.freeze({
 	Some,
