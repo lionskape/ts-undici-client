@@ -16,8 +16,8 @@ type ErrPayload<E> = EnumVariant<ResultFactories<unknown, E>, "error">;
 type ResultMethods<T, E> = EnumMethods<
 	ResultFactories<T, E>,
 	{
-		readonly isOk: (this: Result<T, E>) => boolean;
-		readonly isError: (this: Result<T, E>) => boolean;
+		readonly isOk: (this: Result<T, E>) => this is Ok<T>;
+		readonly isError: (this: Result<T, E>) => this is Err<E>;
 		readonly map: <U>(
 			this: Result<T, E>,
 			mapper: (value: T) => U,
@@ -46,13 +46,13 @@ export const Result = createEnum<
 		error: (error) => ({ error }),
 	},
 	{
-		isOk<T, E>(this: Result<T, E>) {
+		isOk<T, E>(this: Result<T, E>): this is Ok<T> {
 			return this.match({
 				ok: () => true,
 				error: () => false,
 			});
 		},
-		isError<T, E>(this: Result<T, E>) {
+		isError<T, E>(this: Result<T, E>): this is Err<E> {
 			return this.match({
 				ok: () => false,
 				error: () => true,
