@@ -1,13 +1,13 @@
 export type VariantFactoryResult = Record<string, unknown> | undefined;
 
-export type VariantFactory<
-	Args extends readonly unknown[] = readonly unknown[],
-> = (...args: Args) => VariantFactoryResult;
+// biome-ignore lint/suspicious/noExplicitAny: Allow any args for factory flexibility
+export type VariantFactory = (...args: any[]) => VariantFactoryResult;
 
 export type VariantFactories = { [Name in string]: VariantFactory };
 
 export type VariantPayload<Factory> = Factory extends (
-	...args: readonly unknown[]
+	// biome-ignore lint/suspicious/noExplicitAny: Allow any args for factory flexibility
+	...args: any[]
 ) => infer Result
 	? Result extends undefined
 		? Record<string, never>
@@ -33,23 +33,15 @@ export type EnumValue<Factories extends VariantFactories> = {
 
 export type EnumMethods<
 	_Factories extends VariantFactories,
-	Methods extends Record<
-		string,
-		(...args: readonly unknown[]) => unknown
-	> = Record<string, never>,
+	// biome-ignore lint/complexity/noBannedTypes: Function is needed for generic method constraints
+	Methods extends Record<string, Function> = Record<string, never>,
 > = Methods;
 
 export type EnumInstance<
 	Factories extends VariantFactories,
-	Methods extends EnumMethods<Factories> = Record<string, never>,
-> = EnumValue<Factories> & {
-	[Key in keyof Methods]: Methods[Key] extends (
-		this: EnumInstance<Factories, Methods>,
-		...args: infer Args
-	) => infer Result
-		? (this: EnumInstance<Factories, Methods>, ...args: Args) => Result
-		: never;
-};
+	// biome-ignore lint/complexity/noBannedTypes: Function is needed for generic method constraints
+	Methods extends Record<string, Function> = Record<string, never>,
+> = EnumValue<Factories> & Methods;
 
 export type EnumType<Factories extends VariantFactories> = {
 	new (
@@ -66,7 +58,8 @@ export type EnumType<Factories extends VariantFactories> = {
 
 export type EnumTypeWithMethods<
 	Factories extends VariantFactories,
-	Methods extends EnumMethods<Factories>,
+	// biome-ignore lint/complexity/noBannedTypes: Function is needed for generic method constraints
+	Methods extends Record<string, Function>,
 > = {
 	new (
 		type: keyof Factories & string,
@@ -86,7 +79,8 @@ function isRecordLike(value: unknown): value is Record<string, unknown> {
 
 export function createEnum<
 	const Factories extends VariantFactories,
-	const Methods extends EnumMethods<Factories> = Record<string, never>,
+	// biome-ignore lint/complexity/noBannedTypes: Function is needed for generic method constraints
+	const Methods extends Record<string, Function> = Record<string, never>,
 >(
 	definitions: Factories,
 	methods?: Methods,
