@@ -16,8 +16,8 @@ type NonePayload = EnumVariant<OptionFactories<unknown>, "none">;
 type OptionMethods<T> = EnumMethods<
 	OptionFactories<T>,
 	{
-		readonly isSome: (this: Option<T>) => boolean;
-		readonly isNone: (this: Option<T>) => boolean;
+		readonly isSome: (this: Option<T>) => this is Some<T>;
+		readonly isNone: (this: Option<T>) => this is None;
 		readonly map: <U>(this: Option<T>, mapper: (value: T) => U) => Option<U>;
 		readonly matchValue: <R>(
 			this: Option<T>,
@@ -40,13 +40,13 @@ export const OptionEnum = createEnum<
 		none: () => undefined,
 	},
 	{
-		isSome<T>(this: Option<T>) {
+		isSome<T>(this: Option<T>): this is Some<T> {
 			return this.match({
 				some: () => true,
 				none: () => false,
 			});
 		},
-		isNone<T>(this: Option<T>) {
+		isNone<T>(this: Option<T>): this is None {
 			return this.match({
 				some: () => false,
 				none: () => true,
