@@ -10,8 +10,6 @@ type OptionFactories<T> = {
 	readonly none: () => undefined;
 };
 
-type AnyOptionFactories = OptionFactories<unknown>;
-
 type SomePayload<T> = EnumVariant<OptionFactories<T>, "some">;
 type NonePayload = EnumVariant<OptionFactories<unknown>, "none">;
 
@@ -29,11 +27,9 @@ type OptionMethods<T> = EnumMethods<
 	}
 >;
 
-type AnyOptionMethods = OptionMethods<unknown>;
-
-const OptionEnum = createEnum<AnyOptionFactories, AnyOptionMethods>(
+const OptionEnum = createEnum<OptionFactories<unknown>, OptionMethods<unknown>>(
 	{
-		some: (value: unknown) => ({ value }),
+		some: (value) => ({ value }),
 		none: () => undefined,
 	},
 	{
@@ -71,17 +67,16 @@ const OptionEnum = createEnum<AnyOptionFactories, AnyOptionMethods>(
 				none: () => defaultValue,
 			});
 		},
-	} as unknown as AnyOptionMethods,
+	},
 );
 
 export type Option<T> = EnumInstance<OptionFactories<T>, OptionMethods<T>>;
 export type Some<T> = Option<T> & SomePayload<T>;
 export type None = Option<never> & NonePayload;
 
-export const Some = <T>(value: T): Some<T> =>
-	OptionEnum.some(value) as unknown as Some<T>;
+export const Some = <T>(value: T): Some<T> => OptionEnum.some(value) as Some<T>;
 
-export const None = (): None => OptionEnum.none() as unknown as None;
+export const None = (): None => OptionEnum.none() as None;
 
 export const Option = Object.freeze({
 	Some,
