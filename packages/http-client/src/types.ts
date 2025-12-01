@@ -25,8 +25,9 @@ export interface OpaqueBase {
 	validationDetails?: ValidationIssue[];
 }
 
-export type Opaque<TOpaqueExtra extends Record<string, unknown> = {}> =
-	OpaqueBase & TOpaqueExtra;
+export type Opaque<
+	TOpaqueExtra extends Record<string, unknown> = Record<string, never>,
+> = OpaqueBase & TOpaqueExtra;
 
 export interface ResponseSchema {
 	headersSchema?: z.ZodTypeAny;
@@ -36,8 +37,8 @@ export interface ResponseSchema {
 export type ResponseSchemaMap = Map<number, ResponseSchema>;
 
 export interface HttpRequestOptions<
-	TResponseSchemas extends Record<number, unknown> = Record<number, unknown>,
-	TOpaqueExtra extends Record<string, unknown> = {},
+	_TResponseSchemas extends Record<number, unknown> = Record<number, unknown>,
+	TOpaqueExtra extends Record<string, unknown> = Record<string, never>,
 > {
 	serviceName: string;
 	origin: string;
@@ -56,7 +57,7 @@ export interface HttpRequestOptions<
 
 export interface PreparedRequest<
 	TResponseSchemas extends Record<number, unknown> = Record<number, unknown>,
-	TOpaqueExtra extends Record<string, unknown> = {},
+	TOpaqueExtra extends Record<string, unknown> = Record<string, never>,
 > {
 	options: HttpRequestOptions<TResponseSchemas, TOpaqueExtra>;
 	opaque: Opaque<TOpaqueExtra>;
@@ -70,7 +71,7 @@ export interface HttpClientResponseSnapshot {
 
 export interface HttpResultWithSchemas<
 	TResponseSchemas extends Record<number, unknown> = Record<number, unknown>,
-	TOpaqueExtra extends Record<string, unknown> = {},
+	TOpaqueExtra extends Record<string, unknown> = Record<string, never>,
 > {
 	status: keyof TResponseSchemas & number;
 	data: TResponseSchemas[keyof TResponseSchemas & number];
@@ -80,12 +81,12 @@ export interface HttpResultWithSchemas<
 
 export type HttpResult<
 	T,
-	TOpaqueExtra extends Record<string, unknown> = {},
+	TOpaqueExtra extends Record<string, unknown> = Record<string, never>,
 > = HttpResultWithSchemas<{ 200: T }, TOpaqueExtra>;
 
 export interface HttpClientMachineContext<
 	TResponseSchemas extends Record<number, unknown> = Record<number, unknown>,
-	TOpaqueExtra extends Record<string, unknown> = {},
+	TOpaqueExtra extends Record<string, unknown> = Record<string, never>,
 > {
 	attempt: number;
 	request?: HttpRequestOptions<TResponseSchemas, TOpaqueExtra>;
@@ -98,7 +99,7 @@ export interface HttpClientMachineContext<
 
 export type HttpClientMachineEvent<
 	TResponseSchemas extends Record<number, unknown> = Record<number, unknown>,
-	TOpaqueExtra extends Record<string, unknown> = {},
+	TOpaqueExtra extends Record<string, unknown> = Record<string, never>,
 > =
 	| {
 			type: "REQUEST";
@@ -110,7 +111,7 @@ export type HttpClientMachineEvent<
 
 export interface HttpClientMachineServices<
 	TResponseSchemas extends Record<number, unknown> = Record<number, unknown>,
-	TOpaqueExtra extends Record<string, unknown> = {},
+	TOpaqueExtra extends Record<string, unknown> = Record<string, never>,
 > {
 	prepareRequest?: (
 		context: HttpClientMachineContext<TResponseSchemas, TOpaqueExtra>,
@@ -128,7 +129,7 @@ export interface HttpClientMachineServices<
 
 export interface HttpClientMachineActions<
 	TResponseSchemas extends Record<number, unknown> = Record<number, unknown>,
-	TOpaqueExtra extends Record<string, unknown> = {},
+	TOpaqueExtra extends Record<string, unknown> = Record<string, never>,
 > {
 	onRequestQueued?: (
 		context: HttpClientMachineContext<TResponseSchemas, TOpaqueExtra>,
@@ -147,7 +148,7 @@ export interface HttpClientMachineActions<
 
 export interface CreateHttpClientMachineOptions<
 	TResponseSchemas extends Record<number, unknown> = Record<number, unknown>,
-	TOpaqueExtra extends Record<string, unknown> = {},
+	TOpaqueExtra extends Record<string, unknown> = Record<string, never>,
 > {
 	id?: string;
 	maxAttempts?: number;

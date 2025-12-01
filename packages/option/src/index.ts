@@ -37,13 +37,13 @@ const OptionEnum = createEnum<AnyOptionFactories, AnyOptionMethods>(
 		none: () => undefined,
 	},
 	{
-		isSome<T>(this: Option<T>) {
+		isSome<T>(this: Option<T>): this is Some<T> {
 			return this.match({
 				some: () => true,
 				none: () => false,
 			});
 		},
-		isNone<T>(this: Option<T>) {
+		isNone<T>(this: Option<T>): this is None {
 			return this.match({
 				some: () => false,
 				none: () => true,
@@ -51,8 +51,9 @@ const OptionEnum = createEnum<AnyOptionFactories, AnyOptionMethods>(
 		},
 		map<T, U>(this: Option<T>, mapper: (value: T) => U) {
 			return this.match({
-				some: ({ value }: SomePayload<T>) => Some(mapper(value)),
-				none: () => None(),
+				some: ({ value }: SomePayload<T>) =>
+					OptionEnum.some(mapper(value)) as Option<U>,
+				none: () => OptionEnum.none() as Option<U>,
 			});
 		},
 		matchValue<T, R>(
@@ -70,7 +71,7 @@ const OptionEnum = createEnum<AnyOptionFactories, AnyOptionMethods>(
 				none: () => defaultValue,
 			});
 		},
-	},
+	} as unknown as AnyOptionMethods,
 );
 
 export type Option<T> = EnumInstance<OptionFactories<T>, OptionMethods<T>>;
@@ -80,7 +81,7 @@ export type None = Option<never> & NonePayload;
 export const Some = <T>(value: T): Some<T> =>
 	OptionEnum.some(value) as unknown as Some<T>;
 
-export const None = (): None => OptionEnum.none() as None;
+export const None = (): None => OptionEnum.none() as unknown as None;
 
 export const Option = Object.freeze({
 	Some,
