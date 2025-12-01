@@ -1,0 +1,6 @@
+# This file defines code owners for pull request reviews
+# These owners will be automatically requested for review when someone opens a pull request
+# For more information, see: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for all files
+* @lionskape
