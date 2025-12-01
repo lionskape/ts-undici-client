@@ -30,9 +30,6 @@ type ResultMethods<T, E> = EnumMethods<
 	}
 >;
 
-type AnyResultFactories = ResultFactories<unknown, unknown>;
-type AnyResultMethods = ResultMethods<unknown, unknown>;
-
 export type Result<T, E> = EnumInstance<
 	ResultFactories<T, E>,
 	ResultMethods<T, E>
@@ -40,10 +37,13 @@ export type Result<T, E> = EnumInstance<
 export type Ok<T> = Result<T, never> & OkPayload<T>;
 export type Err<E> = Result<never, E> & ErrPayload<E>;
 
-export const Result = createEnum<AnyResultFactories, AnyResultMethods>(
+export const Result = createEnum<
+	ResultFactories<unknown, unknown>,
+	ResultMethods<unknown, unknown>
+>(
 	{
-		ok: (value: unknown) => ({ value }),
-		error: (error: unknown) => ({ error }),
+		ok: (value) => ({ value }),
+		error: (error) => ({ error }),
 	},
 	{
 		isOk<T, E>(this: Result<T, E>) {
@@ -79,10 +79,9 @@ export const Result = createEnum<AnyResultFactories, AnyResultMethods>(
 				error: ({ error }: ErrPayload<E>) => Result.ok(error) as Result<E, T>,
 			});
 		},
-	} as unknown as AnyResultMethods,
+	},
 );
 
-export const Ok = <T>(value: T): Ok<T> => Result.ok(value) as unknown as Ok<T>;
+export const Ok = <T>(value: T): Ok<T> => Result.ok(value) as Ok<T>;
 
-export const Err = <E>(error: E): Err<E> =>
-	Result.error(error) as unknown as Err<E>;
+export const Err = <E>(error: E): Err<E> => Result.error(error) as Err<E>;
